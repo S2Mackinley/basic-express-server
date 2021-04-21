@@ -6,6 +6,7 @@ const app = express();
 const notFound = require('./error-handlers/404.js');
 const errors = require('./error-handlers/500.js');
 const logger = require('./middleware/logger.js');
+const validator = require('./middleware/validator');
 
 // global middleware for:
 // handling the parsing of a req.body
@@ -14,47 +15,19 @@ app.use(express.json());
 // we are missing some key API server constructs:
 // - express global middleware for handling incoming req
 // - custom 500 and 404 error handling middleware
-// app.use(logger);
+app.use(logger);
 
-// GET http://localhost:3333?name=brian&cool=fun
+//ROUTES
+app.get('/person', validator, (req, res) => {
+	let output = { name: req.query.name };
+	res.status(200).json(output);
+});
+
+//PROOF OF LIFE
 app.get('/hello', (req, res) => {
-	console.log(req.query); // { name: 'brian', cool: 'fun'}
+	console.log(req.query);
 	res.send('hello world!');
 });
-
-// GET http://localhost:3333/hello/brian
-app.get('/hello/:person', (req, res) => {
-	console.log('name:', req.params.person);
-	res.send({ name: req.params.person });
-});
-
-// http://localhost:33333/hello/a/b
-app.get('/hello/:person/:another', (req, res) => {
-	console.log('params', req.params);
-	res.send(req.params);
-});
-
-app.get('/cool', logger, square(5), (req, res) => {
-	console.log(req.squared);
-	res.json({ num: req.squared });
-});
-
-app.post('/test-post', (req, res) => {
-	console.log(req.body);
-	res.send('great, cool');
-});
-
-// function currying
-function square(n) {
-	return (req, res, next) => {
-		if (typeof n !== 'number') {
-			next('not a number!');
-		} else {
-			req.squared = n * n;
-			next();
-		}
-	};
-}
 
 // catch all route handles routes that arent found
 app.use('*', notFound);

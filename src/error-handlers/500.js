@@ -1,7 +1,5 @@
-'use strict';
+"use strict";
 
-function errorHandler(err, req, res, next) {
-	res.status(500).send('something went wrong');
-}
-
-module.exports = errorHandler;
+module.exports = (err, req, res, next) => {
+  res.status(500).send("Something went wrong");
+};
