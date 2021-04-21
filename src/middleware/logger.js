@@ -1,8 +1,7 @@
 'use strict';
 
-const logger = (req, res, next) => {
+module.exports = (req, res, next) => {
 	console.log('Request data:', req.method, req.path);
 	next();
 };
 
-module.exports = logger;
