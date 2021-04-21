@@ -1,10 +1,5 @@
-  
-'use strict'
+'use strict';
 
-module.exports = (req,res,next)=>{
-    if (req.query.name){
-        next()
-    } else{
-        next('there is no name?')
-    }
-}
+module.exports = (req, res, next) => {
+	req.query.name ? next() : next('no name was given');
+};
